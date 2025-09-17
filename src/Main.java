@@ -1,5 +1,10 @@
 import java.util.Scanner;
 
+import model.Employee;
+import model.Item;
+import model.User;
+import service.ConsumptionService;
+
 public class Main {
     public static void main(String[] args) {
         ConsumptionService sistema = new ConsumptionService();
@@ -13,6 +18,7 @@ public class Main {
             System.out.println("3 - Cadastro de funcionario");
             System.out.println("4 - Relatório");
             System.out.println("0 - Sair");
+
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine();

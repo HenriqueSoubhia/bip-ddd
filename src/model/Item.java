@@ -1,99 +1,104 @@
 package model;
 
 public class Item {
-    private String id;
+    private int id;              // gerado pelo banco (IDENTITY)
+    private Long barcode;      // opcional (código de barras ou crachá)
     private String name;
+    private String category;
     private int currentQuantity;
     private int minimumQuantity;
-    private String category;
 
-    private static int counter = 1;
-
-    // Constructors
-    public Item(String name) {
-        this.id = generateId();
-        this.name = name;
-        this.category = "Uncategorized";
-        this.currentQuantity = 0;
-        this.minimumQuantity = 0;
-    }
-
-    public Item(String name, String category) {
-        this.id = generateId();
+    // Construtores
+    public Item(String name, String category, Long barcode, int currentQuantity, int minimumQuantity) {
         this.name = name;
         this.category = category;
-        this.currentQuantity = 0;
-        this.minimumQuantity = 0;
-    }
-
-    public Item(String name, int currentQuantity, int minimumQuantity) {
-        this.id = generateId();
-        this.name = name;
-        this.category = "Uncategorized";
+        this.barcode = barcode;
         this.currentQuantity = currentQuantity;
         this.minimumQuantity = minimumQuantity;
     }
 
     public Item(String name, String category, int currentQuantity, int minimumQuantity) {
-        this.id = generateId();
-        this.name = name;
-        this.category = category;
-        this.currentQuantity = currentQuantity;
-        this.minimumQuantity = minimumQuantity;
+        this(name, category, null, currentQuantity, minimumQuantity);
     }
 
-    // methods
-    private String generateId() {
-        String newId = String.format("I%03d", counter++);
-        return newId;
+    public Item(String name, int currentQuantity, int minimumQuantity) {
+        this(name, "Uncategorized", currentQuantity, minimumQuantity);
     }
 
-    public void consume(){
-        int quantity = 1;
+    public Item(String name, String category) {
+        this(name, category, 0, 0);
+    }
+
+    public Item(String name) {
+        this(name, "Uncategorized", 0, 0);
+    }
+
+    // Métodos de negócio
+    public void consume() {
+        consume(1);
+    }
+
+    public void consume(int quantity) {
         if (quantity > currentQuantity) {
-            throw new IllegalArgumentException("Insufficient stock to consume " + quantity + " units.");
+            throw new IllegalArgumentException("Estoque insuficiente para consumir " + quantity + " unidades.");
         }
         currentQuantity -= quantity;
     }
 
-    public void consume(int quantity){
-        if (quantity > currentQuantity) {
-            throw new IllegalArgumentException("Insufficient stock to consume " + quantity + " units.");
-        }
-        currentQuantity -= quantity;
-    }
-
-    public boolean isBelowMinimum(){
+    public boolean isBelowMinimum() {
         return currentQuantity < minimumQuantity;
     }
 
-    public void displayInfo(){
-        System.out.printf("Name: %s, Category: %s, Quantity: %s, ID: %s%n", name, category, currentQuantity,id);
+    public void displayInfo() {
+        System.out.printf(
+                "ID: %d, Barcode: %s, Name: %s, Category: %s, Quantity: %d, Min: %d%n",
+                id,
+                (barcode != null ? barcode : "N/A"),
+                name,
+                category,
+                currentQuantity,
+                minimumQuantity
+        );
     }
 
-
-    // getters and setters
-    public String getId() {
+    // Getters e Setters
+    public int getId() {
         return id;
     }
 
-    private void setId(String id) {
+    public void setId(int id) {  // o DAO vai setar depois de salvar no banco
         this.id = id;
+    }
+
+    public Long getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(Long barcode) {
+        this.barcode = barcode;
     }
 
     public String getName() {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getCurrentQuantity() {
         return currentQuantity;
     }
 
-    private void setCurrentQuantity(int currentQuantity) {
+    public void setCurrentQuantity(int currentQuantity) {
         this.currentQuantity = currentQuantity;
     }
 
@@ -101,23 +106,7 @@ public class Item {
         return minimumQuantity;
     }
 
-    private void setMinimumQuantity(int minimumQuantity) {
+    public void setMinimumQuantity(int minimumQuantity) {
         this.minimumQuantity = minimumQuantity;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    private void setCategory(String category) {
-        this.category = category;
-    }
-
-    public static int getCounter() {
-        return counter;
-    }
-
-    private static void setCounter(int counter) {
-        Item.counter = counter;
     }
 }

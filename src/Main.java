@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Scanner;
 
 import dao.ConsumptionRecordDAO;
@@ -35,11 +36,11 @@ public class Main {
 
             switch (opcao) {
                 case 1 -> {
-                    System.out.print("Digite o id do funcionario (ex: U001): ");
-                    String idUser = scanner.nextLine();
+                    System.out.print("Digite o crachá do funcionario: ");
+                    int idUser = scanner.nextInt();
 
-                    System.out.print("Digite o id do material (ex: I001): ");
-                    String idItem = scanner.nextLine();
+                    System.out.print("Digite o codigo de barra do material: ");
+                    int idItem = scanner.nextInt();
 
                     System.out.print("Digite a quantidade a ser consumida: ");
                     int quantity = scanner.nextInt();
@@ -54,6 +55,13 @@ public class Main {
                     System.out.print("Digite a categoria do material: ");
                     String category = scanner.nextLine();
 
+                    System.out.print("Digite o código de barras do material: ");
+                    String barcode = scanner.nextLine();
+                    Long code = null;
+                    if (!barcode.isBlank()) {
+                        code = Long.parseLong(barcode); // usa Long para números grandes
+                    }
+
                     System.out.print("Digite a quantidade atual do material: ");
                     int currentQuantity = scanner.nextInt();
                     scanner.nextLine();
@@ -62,22 +70,36 @@ public class Main {
                     int minimumQuantity = scanner.nextInt();
                     scanner.nextLine();
 
-                    Item newItem = new Item(name, category, currentQuantity, minimumQuantity);
+                    Item newItem = new Item(name, category, code, currentQuantity, minimumQuantity);
+
                     ItemDAO dao = new ItemDAO();
                     dao.insert(newItem);
-                    sistema.registerItem(newItem);
+
+                    System.out.println("Item cadastrado com sucesso!");
+
                 }
                 case 3 -> {
                     System.out.print("Digite o nome do funcionário: ");
                     String name = scanner.nextLine();
-                    Employee newUser = new Employee(name);
+
+                    System.out.print("Digite o código do crachá (ou ENTER para pular): ");
+                    String badgeInput = scanner.nextLine();
+                    Long badge = null;
+                    if (!badgeInput.isBlank()) {
+                        badge = Long.parseLong(badgeInput); // usa Long para números grandes
+                    }
+
+                    Employee newUser = new Employee(name, badge);
+
                     UserDAO dao = new UserDAO();
                     dao.insert(newUser);
-                    sistema.registerUser(newUser);
+
+                    System.out.println("Funcionário cadastrado com sucesso! ID: " + newUser.getId());
+
 
                 }
                 case 4 -> {
-                    sistema.showConsumptionReport();
+//                    sistema.showConsumptionReport();
                 }
             }
 

@@ -16,8 +16,8 @@ public class ConsumptionRecordDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, record.getId()); // ID do registro (C001, C002...)
-            stmt.setString(2, record.getItem().getId());
-            stmt.setString(3, record.getUser().getId());
+            stmt.setInt(2, record.getItem().getId());
+            stmt.setInt(3, record.getUser().getId());
             stmt.setTimestamp(4, Timestamp.valueOf(record.getDate())); // LocalDateTime -> Timestamp
             stmt.setInt(5, record.getQuantity());
 

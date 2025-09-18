@@ -1,39 +1,51 @@
 package model;
 
-import dao.UserIdGenerator;
-
-public abstract class User {
+public class User {
+    private int id;           // ID gerado pelo banco
     private String name;
-    private String id;
+    private Long badgeCode; // opcional (código do crachá)
+
+    // Construtores
+    public User(String name, Long badgeCode) {
+        this.name = name;
+        this.badgeCode = badgeCode;
+    }
 
     public User(String name) {
-        this.name = name;
-        this.id = generateId();
+        this(name, null);
     }
 
-    private String generateId() {
-        int nextNumber = UserIdGenerator.getNextId();
-        return String.format("U%03d", nextNumber);
-    }
-
-    public String getId() {
+    // Getters e Setters
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {  // DAO vai setar depois de salvar
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    private void setId(String id) {
-        this.id = id;
+    public Long getBadgeCode() {
+        return badgeCode;
     }
 
-    public void displayInfo(){
-        System.out.printf("Nome: %s, ID: %s%n", name, id);
+    public void setBadgeCode(Long badgeCode) {
+        this.badgeCode = badgeCode;
     }
 
+    public void displayInfo() {
+        System.out.printf(
+                "ID: %d, Name: %s, Badge: %s%n",
+                id,
+                name,
+                (badgeCode != null ? badgeCode : "N/A")
+        );
+    }
 }

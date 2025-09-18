@@ -6,4 +6,8 @@ public class Employee extends User {
         super(nome);
     }
 
+    public Employee(String nome, Long badgeCode) {
+        super(nome, badgeCode);
+    }
+
 }

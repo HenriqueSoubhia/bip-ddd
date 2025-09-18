@@ -12,12 +12,12 @@ import java.sql.SQLException;
 public class ItemDAO {
 
     public void insert(Item item) {
-        String sql = "INSERT INTO items (ID, NAME, CATEGORY, CURRENT_QUANTITY, MINIMUM_QUANTITY) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO items (BARCODE, NAME, CATEGORY, CURRENT_QUANTITY, MINIMUM_QUANTITY) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, item.getId());
+            stmt.setLong(1, item.getBarcode());
             stmt.setString(2, item.getName());
             stmt.setString(3, item.getCategory());
             stmt.setInt(4, item.getCurrentQuantity());
@@ -31,13 +31,13 @@ public class ItemDAO {
         }
     }
 
-    public Item findById(String id) {
+    public Item findById(int id) {
         String sql = "SELECT * FROM items WHERE ID = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {

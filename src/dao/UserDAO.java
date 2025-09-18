@@ -1,9 +1,11 @@
 package dao;
 
+import model.Employee;
 import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
@@ -24,4 +26,27 @@ public class UserDAO {
             throw new RuntimeException("Erro ao inserir usuário: " + e.getMessage(), e);
         }
     }
+
+    public User findById(String id) {
+        String sql = "SELECT * FROM users WHERE ID = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String name = rs.getString("NAME");
+
+                return new Employee(name);
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao encontrar usuário: " + e.getMessage(), e);
+        }
+    }
+
 }

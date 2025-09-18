@@ -1,5 +1,8 @@
 package service;
 
+import dao.ConsumptionRecordDAO;
+import dao.ItemDAO;
+import dao.UserDAO;
 import model.ConsumptionRecord;
 import model.Item;
 import model.User;
@@ -14,11 +17,21 @@ public class ConsumptionService {
     private List<User> users;
     private List<ConsumptionRecord> registers;
 
+    private final UserDAO userDAO;
+    private final ItemDAO itemDAO;
+    private final ConsumptionRecordDAO consumptionRecordDAO;
+
+
     //Constructor
-    public ConsumptionService() {
+    public ConsumptionService(UserDAO userDAO, ItemDAO itemDAO, ConsumptionRecordDAO consumptionRecordDAO) {
         this.items = new ArrayList<>();
         this.users = new ArrayList<>();
         this.registers = new ArrayList<>();
+
+        this.userDAO = userDAO;
+        this.itemDAO = itemDAO;
+        this.consumptionRecordDAO = consumptionRecordDAO;
+
     }
 
     // methods
@@ -34,6 +47,17 @@ public class ConsumptionService {
         item.consume(quantity);
         ConsumptionRecord record = new ConsumptionRecord(user, item, quantity, LocalDateTime.now());
         registers.add(record);
+    }
+
+    public void recordConsumption(String userId, String itemId, int quantity) {
+        User user = userDAO.findById(userId);
+        System.out.println(user.getName());
+
+        Item item = itemDAO.findById(itemId);
+        System.out.println(item.getName());
+
+        ConsumptionRecord record = new ConsumptionRecord(user, item, quantity, LocalDateTime.now());
+        consumptionRecordDAO.insert(record);
     }
 
     public void recordConsumption(User user, Item item) {

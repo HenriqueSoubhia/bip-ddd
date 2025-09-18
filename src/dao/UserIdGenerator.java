@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class UserIdGenerator {
 
     public static int getNextId() {
-        String sql = "SELECT MAX(ID) AS MAX_ID FROM users_app";
+        String sql = "SELECT MAX(ID) AS MAX_ID FROM users";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);

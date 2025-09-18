@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import dao.ConsumptionRecordDAO;
+import dao.ItemDAO;
 import dao.UserDAO;
 import model.Employee;
 import model.Item;
@@ -8,7 +10,14 @@ import service.ConsumptionService;
 
 public class Main {
     public static void main(String[] args) {
-        ConsumptionService sistema = new ConsumptionService();
+
+        UserDAO userDAO = new UserDAO();
+        ItemDAO itemDAO = new ItemDAO();
+        ConsumptionRecordDAO consumptionRecordDAO = new ConsumptionRecordDAO();
+
+
+
+        ConsumptionService sistema = new ConsumptionService(userDAO, itemDAO, consumptionRecordDAO);
 
         Scanner scanner = new Scanner(System.in);
         int opcao;
@@ -29,28 +38,14 @@ public class Main {
                     System.out.print("Digite o id do funcionario (ex: U001): ");
                     String idUser = scanner.nextLine();
 
-                    User user = sistema.findUserById(idUser);
-
-                    if (user == null) {
-                        System.out.println("Funcionário não encontrado.");
-                        continue;
-                    }
-
                     System.out.print("Digite o id do material (ex: I001): ");
                     String idItem = scanner.nextLine();
-
-                    Item item = sistema.findItemById(idItem);
-
-                    if (item == null) {
-                        System.out.println("Item não encontrado.");
-                        continue;
-                    }
 
                     System.out.print("Digite a quantidade a ser consumida: ");
                     int quantity = scanner.nextInt();
                     scanner.nextLine();
 
-                    sistema.recordConsumption(user, item, quantity);
+                    sistema.recordConsumption(idUser, idItem, quantity);
                 }
                 case 2 -> {
                     System.out.print("Digite o nome do material: ");
@@ -68,13 +63,14 @@ public class Main {
                     scanner.nextLine();
 
                     Item newItem = new Item(name, category, currentQuantity, minimumQuantity);
+                    ItemDAO dao = new ItemDAO();
+                    dao.insert(newItem);
                     sistema.registerItem(newItem);
                 }
                 case 3 -> {
                     System.out.print("Digite o nome do funcionário: ");
                     String name = scanner.nextLine();
                     Employee newUser = new Employee(name);
-                    System.out.print(newUser.getId());
                     UserDAO dao = new UserDAO();
                     dao.insert(newUser);
                     sistema.registerUser(newUser);

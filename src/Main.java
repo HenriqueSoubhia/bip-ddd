@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import dao.UserDAO;
 import model.Employee;
 import model.Item;
 import model.User;
@@ -73,6 +74,9 @@ public class Main {
                     System.out.print("Digite o nome do funcionário: ");
                     String name = scanner.nextLine();
                     Employee newUser = new Employee(name);
+                    System.out.print(newUser.getId());
+                    UserDAO dao = new UserDAO();
+                    dao.insert(newUser);
                     sistema.registerUser(newUser);
 
                 }

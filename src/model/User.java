@@ -1,10 +1,10 @@
 package model;
 
+import dao.UserIdGenerator;
+
 public abstract class User {
     private String name;
     private String id;
-
-    private static int counter = 1;
 
     public User(String name) {
         this.name = name;
@@ -12,9 +12,8 @@ public abstract class User {
     }
 
     private String generateId() {
-        String newId = String.format("U%03d", counter);
-        counter++;
-        return newId;
+        int nextNumber = UserIdGenerator.getNextId();
+        return String.format("U%03d", nextNumber);
     }
 
     public String getId() {

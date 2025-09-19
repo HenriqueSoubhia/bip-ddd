@@ -109,4 +109,21 @@ public class Item {
     public void setMinimumQuantity(int minimumQuantity) {
         this.minimumQuantity = minimumQuantity;
     }
+
+    public void setQuantity(int quantity) {
+        this.currentQuantity = quantity;
+    }
+
+    public void setMinQuantity(int minQuantity) {
+        this.minimumQuantity = minQuantity;
+    }
+
+    public String getQuantity() {
+        return this.currentQuantity + "";
+    }
+
+    public String getMinQuantity() {
+        return this.minimumQuantity + "";
+
+    }
 }

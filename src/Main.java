@@ -28,6 +28,8 @@ public class Main {
             System.out.println("2 - Cadastro de material");
             System.out.println("3 - Cadastro de funcionario");
             System.out.println("4 - Relatório");
+            System.out.println("5 - Deletar consumo");
+            System.out.println("6 - Update material");
             System.out.println("0 - Sair");
 
             System.out.print("Escolha uma opção: ");
@@ -37,16 +39,24 @@ public class Main {
             switch (opcao) {
                 case 1 -> {
                     System.out.print("Digite o crachá do funcionario: ");
-                    int idUser = scanner.nextInt();
+                    String idUser = scanner.nextLine();
+                    Long userCode = null;
+                    if (!idUser.isBlank()) {
+                        userCode = Long.parseLong(idUser);
+                    }
 
                     System.out.print("Digite o codigo de barra do material: ");
-                    int idItem = scanner.nextInt();
+                    String idItem = scanner.nextLine();
+                    Long itemCode = null;
+                    if (!idItem.isBlank()) {
+                        itemCode = Long.parseLong(idItem);
+                    }
 
                     System.out.print("Digite a quantidade a ser consumida: ");
                     int quantity = scanner.nextInt();
                     scanner.nextLine();
 
-                    sistema.recordConsumption(idUser, idItem, quantity);
+                    sistema.recordConsumption(userCode, itemCode, quantity);
                 }
                 case 2 -> {
                     System.out.print("Digite o nome do material: ");
@@ -82,7 +92,7 @@ public class Main {
                     System.out.print("Digite o nome do funcionário: ");
                     String name = scanner.nextLine();
 
-                    System.out.print("Digite o código do crachá (ou ENTER para pular): ");
+                    System.out.print("Digite o código do crachá: ");
                     String badgeInput = scanner.nextLine();
                     Long badge = null;
                     if (!badgeInput.isBlank()) {
@@ -94,13 +104,59 @@ public class Main {
                     UserDAO dao = new UserDAO();
                     dao.insert(newUser);
 
-                    System.out.println("Funcionário cadastrado com sucesso! ID: " + newUser.getId());
+                    System.out.println("Funcionário cadastrado com sucesso! ID: " + newUser.getName());
 
 
                 }
                 case 4 -> {
-//                    sistema.showConsumptionReport();
+                    sistema.showAllData();
                 }
+
+                case 5 ->{
+                    System.out.print("Digite o id do consumo: ");
+                    int recordID = scanner.nextInt();
+                    scanner.nextLine(); // consome a quebra de linha restante
+
+                    System.out.print("Tem certeza que deseja deletar o consumo?(s/n): ");
+                    String confirm = scanner.nextLine();
+
+                    if (confirm.equalsIgnoreCase("s")) {
+                        consumptionRecordDAO.delete(recordID);
+                    }
+
+                }
+                case 6 -> {
+                    System.out.print("Digite o ID do item que deseja atualizar: ");
+                    int itemId = scanner.nextInt();
+                    scanner.nextLine(); // limpar buffer
+
+                    Item item = itemDAO.findByIdOrBarcode((long) itemId); // pega o item existente
+                    if (item == null) {
+                        System.out.println("Item não encontrado!");
+                        break;
+                    }
+
+                    System.out.print("Digite o novo nome do material (atual: " + item.getName() + "): ");
+                    String name = scanner.nextLine();
+                    System.out.print("Digite a nova categoria (atual: " + item.getCategory() + "): ");
+                    String category = scanner.nextLine();
+                    System.out.print("Digite o novo código de barras (atual: " + item.getBarcode() + "): ");
+                    long barcode = Long.parseLong(scanner.nextLine());
+                    System.out.print("Digite a nova quantidade atual (atual: " + item.getQuantity() + "): ");
+                    int quantity = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Digite a nova quantidade mínima (atual: " + item.getMinQuantity() + "): ");
+                    int minQuantity = Integer.parseInt(scanner.nextLine());
+
+                    // atualiza o objeto
+                    item.setName(name);
+                    item.setCategory(category);
+                    item.setBarcode(barcode);
+                    item.setQuantity(quantity);
+                    item.setMinQuantity(minQuantity);
+
+                    itemDAO.update(item);
+                }
+
             }
 
         } while (opcao != 0);

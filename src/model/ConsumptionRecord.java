@@ -4,18 +4,18 @@ import java.time.LocalDateTime;
 
 public class ConsumptionRecord {
 
-    private String id;
+    private int id;
     private Item item;
     private User user;
     private LocalDateTime date;
     private int quantity;
+    private int userId;
+    private int itemId;
 
-    private static int counter = 1;
 
 
     // Constructors
     public ConsumptionRecord(User user, Item item, int quantity, LocalDateTime date){
-        this.id = generateId();
         this.item = item;
         this.user = user;
         this.quantity = quantity;
@@ -26,23 +26,37 @@ public class ConsumptionRecord {
         this(user, item, 1, date);
     }
 
-    //mehtods
-    private String generateId() {
-        return String.format("C%03d", counter++);
+    public ConsumptionRecord() {
+
     }
+
+    public ConsumptionRecord(int id, User user, Item item, int quantity, LocalDateTime date){
+        this.id = id;
+        this.item = item;
+        this.user = user;
+        this.quantity = quantity;
+        this.date = date;
+    }
+
+    //mehtods
 
     public void displayInfo(){
-        System.out.printf("Item: %s, User: %s, Quantity: %d, Date: %s%n",
-            item.getName(), user.getName(), quantity, date);
-
+        if (item != null && user != null) {
+            System.out.printf("ID: %d, Item: %s, User: %s, Quantity: %d, Date: %s%n",
+                    this.id, item.getName(), user.getName(), quantity, date);
+        } else {
+            System.out.printf("ID: %d, Item ou User não carregado, Quantity: %d, Date: %s%n",
+                    this.id, quantity, date);
+        }
     }
 
+
     //getters and setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    private void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -66,7 +80,7 @@ public class ConsumptionRecord {
         return date;
     }
 
-    private void setDate(LocalDateTime date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -74,7 +88,15 @@ public class ConsumptionRecord {
         return quantity;
     }
 
-    private void setQuantity(int quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 }

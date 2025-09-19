@@ -31,56 +31,46 @@ public class ConsumptionService {
     // methods
 
 
-    public void recordConsumption(int userId, int itemId, int quantity) {
+    public void recordConsumption(Long userId, Long itemId, int quantity) {
         User user = userDAO.findByIdOrBadge(userId);
-        Item item = itemDAO.findById(itemId);
+        Item item = itemDAO.findByIdOrBarcode(itemId);
 
         if (user == null) throw new IllegalArgumentException("Usuário não encontrado");
         if (item == null) throw new IllegalArgumentException("Item não encontrado");
 
-        // consome estoque
-        item.consume(quantity);
-
-        // atualiza quantidade no banco
-        // itemDAO.update(item);
-
-        // cria registro de consumo
         ConsumptionRecord record = new ConsumptionRecord(user, item, quantity, LocalDateTime.now());
         consumptionRecordDAO.insert(record);
     }
 
-    public void recordConsumption(int userId, int itemId) {
+    public void recordConsumption(Long userId, Long itemId) {
         recordConsumption(userId, itemId, 1);
+    }
+
+    public void showAllData() {
+        System.out.println("===== Usuários =====");
+        List<User> users = userDAO.findAll();
+        for (User u : users) {
+            u.displayInfo();
+        }
+
+        System.out.println("\n===== Itens =====");
+        List<Item> items = itemDAO.findAll();
+        for (Item i : items) {
+            i.displayInfo();
+        }
+
+        System.out.println("\n===== Registros de Consumo =====");
+        List<ConsumptionRecord> records = consumptionRecordDAO.findAll();
+        for (ConsumptionRecord r : records) {
+            r.displayInfo();
+        }
+
+        System.out.println("\n");
+
     }
 
 
 
-//    public void showConsumptionReport(){
-//        if(!users.isEmpty()){
-//            System.out.println("--- Users ---");
-//            for (User u : users) {
-//                u.displayInfo();
-//            }
-//            System.out.println();
-//        }
-//
-//        if(!items.isEmpty()){
-//            System.out.println("--- Itens ---");
-//            for (Item i : items) {
-//                i.displayInfo();
-//            }
-//            System.out.println();
-//        }
-//
-//        if(!registers.isEmpty()){
-//            System.out.println("--- registros ---");
-//            for (ConsumptionRecord r : registers) {
-//                r.displayInfo();
-//            }
-//            System.out.println();
-//        }
-//
-//    }
 
 
 }

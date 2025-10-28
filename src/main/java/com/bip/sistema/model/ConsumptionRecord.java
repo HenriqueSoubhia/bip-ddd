@@ -1,23 +1,36 @@
 package com.bip.sistema.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "consumption_records")
 public class ConsumptionRecord {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Item item;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item;
+
+    @Column(nullable = false)
     private LocalDateTime date;
+
+    @Column(nullable = false)
     private int quantity;
-    private int userId;
-    private int itemId;
 
+    public ConsumptionRecord() {
+    }
 
-
-    // Constructors
-    public ConsumptionRecord(User user, Item item, int quantity, LocalDateTime date){
-        this.item = item;
+    public ConsumptionRecord(User user, Item item, int quantity, LocalDateTime date) {
         this.user = user;
+        this.item = item;
         this.quantity = quantity;
         this.date = date;
     }
@@ -26,47 +39,29 @@ public class ConsumptionRecord {
         this(user, item, 1, date);
     }
 
-    public ConsumptionRecord() {
-
+    // Getters e Setters
+    public Long getId() {
+        return id;
     }
 
-    public ConsumptionRecord(Long id, User user, Item item, int quantity, LocalDateTime date){
+    public void setId(Long id) {
         this.id = id;
-        this.item = item;
-        this.user = user;
-        this.quantity = quantity;
-        this.date = date;
-    }
-
-    //mehtods
-
-    public void displayInfo(){
-        if (item != null && user != null) {
-            System.out.printf("ID: %d, Item: %s, User: %s, Quantity: %d, Date: %s%n",
-                    this.id, item.getName(), user.getName(), quantity, date);
-        } else {
-            System.out.printf("ID: %d, Item ou User não carregado, Quantity: %d, Date: %s%n",
-                    this.id, quantity, date);
-        }
-    }
-
-
-    //getters and setters
-
-    public Item getItem() {
-        return item;
-    }
-
-    private void setItem(Item item) {
-        this.item = item;
     }
 
     public User getUser() {
         return user;
     }
 
-    private void setUser(User user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 
     public LocalDateTime getDate() {
@@ -85,11 +80,15 @@ public class ConsumptionRecord {
         this.quantity = quantity;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    // Método de exibição (opcional)
+    public void displayInfo() {
+        System.out.printf(
+                "ID: %d, Item: %s, User: %s, Quantity: %d, Date: %s%n",
+                id,
+                item != null ? item.getName() : "N/A",
+                user != null ? user.getName() : "N/A",
+                quantity,
+                date
+        );
     }
 }

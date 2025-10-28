@@ -1,16 +1,33 @@
 package com.bip.sistema.model;
 
+import jakarta.persistence.*;
+
 @Entity
 @Table(name = "items")
 public class Item {
-    private int id;              // gerado pelo banco (IDENTITY)
-    private Long barcode;      // opcional (código de barras ou crachá)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private Long barcode;
+
     private String name;
+
     private String category;
+
+    @Column(name = "current_quantity")
     private int currentQuantity;
+
+    @Column(name = "minimum_quantity")
     private int minimumQuantity;
 
     // Construtores
+    public Item() {
+
+    }
+
     public Item(String name, String category, Long barcode, int currentQuantity, int minimumQuantity) {
         this.name = name;
         this.category = category;
@@ -64,11 +81,11 @@ public class Item {
     }
 
     // Getters e Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {  // o DAO vai setar depois de salvar no banco
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -110,22 +127,5 @@ public class Item {
 
     public void setMinimumQuantity(int minimumQuantity) {
         this.minimumQuantity = minimumQuantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.currentQuantity = quantity;
-    }
-
-    public void setMinQuantity(int minQuantity) {
-        this.minimumQuantity = minQuantity;
-    }
-
-    public String getQuantity() {
-        return this.currentQuantity + "";
-    }
-
-    public String getMinQuantity() {
-        return this.minimumQuantity + "";
-
     }
 }

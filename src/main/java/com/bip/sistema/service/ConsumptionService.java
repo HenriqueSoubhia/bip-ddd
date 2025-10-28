@@ -1,11 +1,11 @@
 package com.bip.sistema.service;
 
-import com.bip.sistema.dao.ConsumptionRecordDAO;
-import com.bip.sistema.dao.ItemDAO;
-import com.bip.sistema.dao.UserDAO;
 import com.bip.sistema.model.ConsumptionRecord;
-import com.bip.sistema.model.Item;
 import com.bip.sistema.model.User;
+import com.bip.sistema.model.Item;
+import com.bip.sistema.repository.ConsumptionRepository;
+import com.bip.sistema.repository.UserRepository;
+import com.bip.sistema.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,40 +14,47 @@ import java.util.List;
 @Service
 public class ConsumptionService {
 
-    private final UserDAO userDAO;
-    private final ItemDAO itemDAO;
-    private final ConsumptionRecordDAO consumptionRecordDAO;
+    private final ConsumptionRepository consumptionRecordRepository;
+    private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
 
-    public ConsumptionService(UserDAO userDAO, ItemDAO itemDAO, ConsumptionRecordDAO consumptionRecordDAO) {
-        this.userDAO = userDAO;
-        this.itemDAO = itemDAO;
-        this.consumptionRecordDAO = consumptionRecordDAO;
+    public ConsumptionService(
+            ConsumptionRepository consumptionRecordRepository,
+            UserRepository userRepository,
+            ItemRepository itemRepository
+    ) {
+        this.consumptionRecordRepository = consumptionRecordRepository;
+        this.userRepository = userRepository;
+        this.itemRepository = itemRepository;
     }
 
-    // Registrar consumo
     public ConsumptionRecord recordConsumption(Long userId, Long itemId, int quantity) {
-        User user = userDAO.findByIdOrBadge(userId);
-        Item item = itemDAO.findByIdOrBarcode(itemId);
+        User user = userRepository.findByBadgeCode(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("Usuário não encontrado com ID: " + userId);
+        }
 
-        if (user == null) throw new IllegalArgumentException("Usuário não encontrado");
-        if (item == null) throw new IllegalArgumentException("Item não encontrado");
-
+        Item item = itemRepository.findById(itemId.intValue()).orElseThrow(() ->
+                new IllegalArgumentException("Item não encontrado com ID: " + itemId)
+        );
         ConsumptionRecord record = new ConsumptionRecord(user, item, quantity, LocalDateTime.now());
-        consumptionRecordDAO.insert(record);
-        return record; // retornar objeto criado
+        return consumptionRecordRepository.save(record);
     }
 
     public ConsumptionRecord recordConsumption(Long userId, Long itemId) {
         return recordConsumption(userId, itemId, 1);
     }
 
-    // Listar todos os registros de consumo
-    public List<ConsumptionRecord> findAll() {
-        return consumptionRecordDAO.findAll();
+    public List<ConsumptionRecord> listAll() {
+        return consumptionRecordRepository.findAll();
     }
 
-    // Buscar consumo por id (opcional)
+    public void deleteRecord(Long id) {
+        consumptionRecordRepository.deleteById(id);
+    }
+
     public ConsumptionRecord findById(Long id) {
-        return consumptionRecordDAO.findById(id);
+        return consumptionRecordRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Registro de consumo não encontrado com ID: " + id));
     }
 }

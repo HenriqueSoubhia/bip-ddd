@@ -1,28 +1,45 @@
 package com.bip.sistema.service;
 
-import com.bip.sistema.dao.ItemDAO;
 import com.bip.sistema.model.Item;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bip.sistema.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ItemService {
-    private ItemDAO itemDAO;
 
-    public ItemService() {
-        this.itemDAO = new ItemDAO(); // inicializa aqui
+    private final ItemRepository itemRepository;
+
+    public ItemService(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
     }
 
-    @Autowired
-    public ItemService(ItemDAO itemDAO) {
-        this.itemDAO = itemDAO;
+    // CREATE
+    public Item createItem(Item item) {
+        return itemRepository.save(item);
     }
 
-    public List<Item> findAll() { return itemDAO.findAll(); }
-    public Item findById(Long id) { return itemDAO.findByIdOrBarcode(id); }
-    public void insert(Item item) { itemDAO.insert(item); }
-    public void update(Item item) { itemDAO.update(item); }
-    public void delete(Long id) { itemDAO.delete(id); }
+    // READ
+    public List<Item> listAll() {
+        return itemRepository.findAll();
+    }
+
+    public Item findById(int id) {
+        return itemRepository.findById(id).orElse(null);
+    }
+
+    public Item findByBarcode(Long barcode) {
+        return itemRepository.findByBarcode(barcode);
+    }
+
+    // UPDATE
+    public Item updateItem(Item item) {
+        return itemRepository.save(item);
+    }
+
+    // DELETE
+    public void deleteItem(int id) {
+        itemRepository.deleteById(id);
+    }
 }

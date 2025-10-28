@@ -1,7 +1,7 @@
 package com.bip.sistema.service;
 
-import com.bip.sistema.dao.UserDAO;
 import com.bip.sistema.model.User;
+import com.bip.sistema.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,35 +9,37 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
-    // Injeção via construtor
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    // Listar todos os usuários
-    public List<User> findAll() {
-        return userDAO.findAll();
+    // CREATE
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    // Buscar usuário por id
-    public User findById(Long id) {
-        return userDAO.findByIdOrBadge(id);
+    // READ
+    public List<User> listAll() {
+        return userRepository.findAll();
     }
 
-    // Inserir novo usuário
-    public void insert(User user) {
-        userDAO.insert(user);
+    public User findById(int id) {
+        return userRepository.findById(id).orElse(null);
     }
 
-    // Atualizar usuário existente
-    public void update(User user) {
-        userDAO.update(user);
+    public User findByBadge(Long badge) {
+        return userRepository.findByBadgeCode(badge);
     }
 
-    // Deletar usuário pelo id
-    public void delete(Long id) {
-        userDAO.delete(id);
+    // UPDATE
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+    // DELETE
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
     }
 }

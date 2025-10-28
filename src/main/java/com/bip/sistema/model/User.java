@@ -1,11 +1,23 @@
 package com.bip.sistema.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
-    private int id;           // ID gerado pelo banco
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
-    private Long badgeCode; // opcional (código do crachá)
+
+    @Column(unique = true)
+    private Long badgeCode;
 
     // Construtores
+    public User() {}
+
     public User(String name, Long badgeCode) {
         this.name = name;
         this.badgeCode = badgeCode;
@@ -16,11 +28,11 @@ public class User {
     }
 
     // Getters e Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {  // DAO vai setar depois de salvar
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -48,4 +60,6 @@ public class User {
                 (badgeCode != null ? badgeCode : "N/A")
         );
     }
+
+
 }

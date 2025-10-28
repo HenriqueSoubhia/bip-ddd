@@ -19,7 +19,7 @@ public class ConsumptionController {
 
     @GetMapping
     public List<ConsumptionRecord> getAll() {
-        return consumptionService.findAll();
+        return consumptionService.listAll();
     }
 
     @GetMapping("/{id}")

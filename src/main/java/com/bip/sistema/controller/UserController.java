@@ -19,11 +19,11 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
-        return userService.findAll();
+        return userService.listAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
+    public ResponseEntity<User> getById(@PathVariable int id) {
         User user = userService.findById(id);
         if (user == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(user);
@@ -31,20 +31,20 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User user) {
-        userService.insert(user);
+        userService.createUser(user);
         return user;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable int id, @RequestBody User user) {
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
-        userService.update(user);
+        userService.updateUser(user);
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

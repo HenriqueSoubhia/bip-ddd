@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    // busca por crachá (badge)
     User findByBadgeCode(Long badgeCode);
 }
